@@ -28,7 +28,6 @@ func NewChatRoom() *ChatRoom {
 }
 
 //增加房间
-//是一个方法
 func (c *ChatRoom) AddRoom(r RoomInfo) {
 	_, ok := c.RoomMap[r]
 	if !ok {
@@ -50,6 +49,7 @@ func (c *ChatRoom) AddClient(r RoomInfo, cli *ClientInfo) {
 	for _, client := range c.RoomMap[r] {
 		if client.Id == cli.Id {
 			flag = true
+			break
 		}
 	}
 	if flag == false {
@@ -65,15 +65,10 @@ func (c *ChatRoom) RemoveClient(r RoomInfo, cli *ClientInfo) {
 	if !ok {
 		return
 	}
-	//如果是创建者被删除，则直接删除房间
-	if cli.Id == r.CreateId {
-		c.RemoveRoom(r)
-		return
-	}
 
 	for idx, client := range c.RoomMap[r] {
 		if client.Id == cli.Id {
-			c.RoomMap[r] = append(c.RoomMap[r][:idx], c.RoomMap[r][idx+1:]...) //要加三个点
+			c.RoomMap[r] = append(c.RoomMap[r][:idx], c.RoomMap[r][idx+1:]...) //要加三个点，表示可变参数
 			//fmt.Println("remove client ",client)
 			//fmt.Println(len(c.RoomMap[r]))
 			return
@@ -103,4 +98,3 @@ func (c *ChatRoom) FindRoom(RoomName string) (RoomInfo, bool) {
 	}
 	return RoomInfo{}, false
 }
-
